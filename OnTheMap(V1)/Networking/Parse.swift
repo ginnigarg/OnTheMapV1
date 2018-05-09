@@ -49,8 +49,14 @@ class Parse {
                 completionHandlerForGET (false , nil, "There is a network Issue")
                 return
             }
+            //Completition Handler Needs Arguments Which are not being provided here
             self.errorHandler(data, response, error as NSError?, completionHandler: completionHandlerForGET)
-            self.convertData(data!, completionHandler : completionHandlerForGET)
+            //self.convertData(data!, completionHandler : completionHandlerForGET)
+            //Works like this
+            self.convertData(data!, completionHandler: { (success, data, error) in
+                completionHandlerForGET(success, data, error)
+            })
+            
         }
         task.resume ()
     }
@@ -74,10 +80,12 @@ class Parse {
     }
     
     func getStudentsInformation (_ completionHandlerForGetStudentsInfo : @ escaping (_ success : Bool , _ result : [Constants.StudentDetail]? , _ errorString : String?) ->  Void ) {
+        print("Inside Get Student Information")
         Parse.sharedInstance().taskForGETMethod { (success , response , error) in
             if success == false {
                 completionHandlerForGetStudentsInfo (false , nil , error)
             } else {
+                //Here the data recieved is an Array of Dictionary not an Dictionary
                 if let data = response!["response"] as AnyObject? {
                     Constants.studentDetails.removeAll ()
                     for results in data as! [AnyObject] {
@@ -85,6 +93,9 @@ class Parse {
                         Constants.studentDetails.append (stud)
                     }
                     completionHandlerForGetStudentsInfo (true , Constants.studentDetails , nil)
+                } else {
+                    //So Error occurs and if statment is never executed
+                    print("Error Here")
                 }
             }
         }

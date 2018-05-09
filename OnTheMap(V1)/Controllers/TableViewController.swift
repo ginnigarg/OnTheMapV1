@@ -15,9 +15,10 @@ class TableViewController : UITableViewController {
     
     override func viewDidLoad () {
         super.viewDidLoad ()
-        performUIUpdatesOnMainThread {
-            self.getStudentsData ()
-        }
+        //performUIUpdatesOnMainThread {
+          //  self.getStudentsData ()
+        //}
+        getStudentsData()
     }
     
     @IBAction func logOut (_ sender: Any) {
@@ -47,13 +48,21 @@ class TableViewController : UITableViewController {
     }
     
     func getStudentsData () {
-        Parse.sharedInstance().getStudentsInformation {(success ,data , error) in
+        print("Get Student Data Called")
+        Parse().getStudentsInformation { (success, data, error) in
+            print(data)
+        }
+        /*
+ Parse.sharedInstance().getStudentsInformation {(success ,data , error) in
+            print(error)
+            print(success)
             if error == nil && success == true {
                 performUIUpdatesOnMainThread {
+                    print(data)
                     self.studentTableView.reloadData()
                 }
             }
-        }
+        } */
     }
     
     override func tableView (_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
