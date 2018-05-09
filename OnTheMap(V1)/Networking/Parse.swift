@@ -88,6 +88,14 @@ class Parse {
             if success == false {
                 completionHandlerForGetStudentsInfo (false , nil , error)
             } else {
+                //print(response)
+                if let parsedData = response!["results"]{
+                    let newData = parsedData as! NSArray
+                        //let valueforPrint = newData[0]["firstName"] as! [String:AnyObject]
+                    let value = newData[0] as! [String:AnyObject]
+                    print(value["firstName"])
+                
+                }
                 //Here the data recieved is an Array of Dictionary not an Dictionary
                 if let data = response!["response"] as AnyObject? {
                     Constants.StudentDetail.studentDetails.removeAll ()
