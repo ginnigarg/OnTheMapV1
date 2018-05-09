@@ -12,7 +12,7 @@ import MapKit
 
 struct Constants{
     
-    static var studentDetails = [StudentDetail] ()
+    
     
     struct UdacityConstants {
         static let ApiUserIdURL = "https://www.udacity.com/api/users/"
@@ -39,6 +39,9 @@ struct Constants{
     }
     
     struct StudentDetail {
+        
+        static var studentDetails = [StudentDetail] ()
+        
         var firstName : String? = "First Name"
         var lastName : String? = "Last Name"
         var lat : Double = 0.0

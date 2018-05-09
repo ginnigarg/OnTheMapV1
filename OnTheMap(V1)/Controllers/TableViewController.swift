@@ -15,9 +15,10 @@ class TableViewController : UITableViewController {
     
     override func viewDidLoad () {
         super.viewDidLoad ()
-        performUIUpdatesOnMainThread {
-            self.getStudentsData ()
-        }
+        //performUIUpdatesOnMainThread {
+          //  self.getStudentsData ()
+        //}
+        getStudentsData()
     }
     
     @IBAction func logOut (_ sender: Any) {
@@ -47,9 +48,15 @@ class TableViewController : UITableViewController {
     }
     
     func getStudentsData () {
-        Parse.sharedInstance().getStudentsInformation {(success ,data , error) in
+        /*print("Get Student Data Called")
+        Parse().getStudentsInformation { (success, data, error) in
+            print(data)
+        }*/
+        
+ Parse.sharedInstance().getStudentsInformation {(success ,data , error) in
             if error == nil && success == true {
                 performUIUpdatesOnMainThread {
+                    print(data ?? "No error in getStudentsInformation in method getStudentsInformation")
                     self.studentTableView.reloadData()
                 }
             }
@@ -57,14 +64,14 @@ class TableViewController : UITableViewController {
     }
     
     override func tableView (_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let count =  Constants.studentDetails.count
+        let count =  Constants.StudentDetail.studentDetails.count
         return count
     }
     
     
     override func tableView (_ tableView: UITableView , didSelectRowAt indexPath : IndexPath) {
         let application = UIApplication.shared
-        let url = URL(string : Constants.studentDetails[indexPath.row].url)
+        let url = URL(string : Constants.StudentDetail.studentDetails[indexPath.row].url)
         if url?.scheme == "https" {
             application.open(url!)
         } else {
@@ -78,7 +85,7 @@ class TableViewController : UITableViewController {
     override func tableView (_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let tableCell = tableView.dequeueReusableCell (withIdentifier: "dataCell", for: indexPath)
         self.tableView.rowHeight = 70
-        let information = Constants.studentDetails[(indexPath as NSIndexPath).row]
+        let information = Constants.StudentDetail.studentDetails[(indexPath as NSIndexPath).row]
         if #available(iOS 8.0, *) {
             tableCell.textLabel?.text = information.firstName! + " " + information.lastName!
             tableCell.detailTextLabel?.text = information.url

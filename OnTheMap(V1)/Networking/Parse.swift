@@ -49,8 +49,14 @@ class Parse {
                 completionHandlerForGET (false , nil, "There is a network Issue")
                 return
             }
+            //Completition Handler Needs Arguments Which are not being provided here
             self.errorHandler(data, response, error as NSError?, completionHandler: completionHandlerForGET)
-            self.convertData(data!, completionHandler : completionHandlerForGET)
+            //self.convertData(data!, completionHandler : completionHandlerForGET)
+            //Works like this
+            self.convertData(data!, completionHandler: { (success, data, error) in
+                completionHandlerForGET(success, data, error)
+            })
+            
         }
         task.resume ()
     }
@@ -69,22 +75,30 @@ class Parse {
             }
             self.errorHandler(data, response, error as NSError?, completionHandler: completionHandlerForPost)
             self.convertData (data! , completionHandler : completionHandlerForPost)
+            self.convertData(data! , completionHandler: { (success , data , error) in
+                completionHandlerForPost(success , data , error)
+            })
         }
         task.resume ()
     }
     
-    func getStudentsInformation (_ completionHandlerForGetStudentsInfo : @ escaping (_ success : Bool , _ result : [Constants.StudentDetail]? , _ errorString : String?) ->  Void ) {
+    func getStudentsInformation (_ completionHandlerForGetStudentsInfo : @ escaping (_ success : Bool , _ result : [String : AnyObject]? , _ errorString : String?) ->  Void ) {
+        print("Inside Get Student Information")
         Parse.sharedInstance().taskForGETMethod { (success , response , error) in
             if success == false {
                 completionHandlerForGetStudentsInfo (false , nil , error)
             } else {
+                //Here the data recieved is an Array of Dictionary not an Dictionary
                 if let data = response!["response"] as AnyObject? {
-                    Constants.studentDetails.removeAll ()
+                    Constants.StudentDetail.studentDetails.removeAll ()
                     for results in data as! [AnyObject] {
                         let stud = Constants.StudentDetail (dictionary : results as! [String : AnyObject])
-                        Constants.studentDetails.append (stud)
+                        Constants.StudentDetail.studentDetails.append (stud)
                     }
-                    completionHandlerForGetStudentsInfo (true , Constants.studentDetails , nil)
+                    completionHandlerForGetStudentsInfo (true , Constants.StudentDetail.studentDetails as [String : AnyObject] , nil)
+                } else {
+                    //So Error occurs and if statment is never executed
+                    print("Error Here")
                 }
             }
         }
